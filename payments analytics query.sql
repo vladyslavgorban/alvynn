@@ -29,6 +29,9 @@ SELECT
                              END                                                          AS transaction_status
                        , ppd.payment_provider
                        , ppd.payment_method                                                  provider_pay_method
+                       , pi.currency
+                       , pi.1.0*base_currency_amount/100 base_currency_amount
+                       , pi.base_currency
                      FROM stealthcasino_payment_service.public.invoices pi
                               --                               LEFT JOIN stealthcasino_player_service.public.players pp
 --                                         ON pp.id = pi.player_id
