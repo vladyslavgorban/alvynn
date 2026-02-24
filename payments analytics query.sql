@@ -30,7 +30,7 @@ SELECT
                        , ppd.payment_provider
                        , ppd.payment_method                                                  provider_pay_method
                        , pi.currency
-                       , pi.1.0*base_currency_amount/100 base_currency_amount
+                       , 1.0*pi.base_currency_amount/100 base_currency_amount
                        , pi.base_currency
                      FROM stealthcasino_payment_service.public.invoices pi
                               --                               LEFT JOIN stealthcasino_player_service.public.players pp
@@ -39,7 +39,6 @@ SELECT
                                         ON ppm.id = pi.payment_method_id
                               LEFT JOIN stealthcasino_payment_service.public.payment_details ppd
                                         ON ppd.id = pi.payment_details_id
-                            LEFt JOIN 
 
                                         ;
 
