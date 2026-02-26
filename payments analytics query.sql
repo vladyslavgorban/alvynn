@@ -22,7 +22,10 @@ SELECT
                                   COALESCE(pi.status_result, '') NOT IN
                                   ('Cancelled by Timeout', 'Cancelled by Customer')
                                  THEN 'Failed'
-                             WHEN pi.status = 1 THEN 'pending'
+                             WHEN pi.status = 1 OR
+                             COALESCE(pi.status_result, '')  IN
+                                  ('Cancelled by Timeout', 'Cancelled by Customer')
+                             THEN 'pending'
                              ELSE
                                  'status: ' || pi.status :: VARCHAR ||
                                  ' (' || COALESCE(pi.status_result, 'no details') || ')'
