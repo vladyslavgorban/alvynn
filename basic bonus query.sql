@@ -2,11 +2,9 @@
 
 SELECT pb.created_at                                          as dttm
      , pb.name                                                as bonus_name
-     , pb.currecy
      , pb.bonus_id
      , pb.player_id
      , pb.id                                                  as operation_id
-     , pb.tag
      , case pb.result
            when 1 then 'pending'
            when 2 then 'activated'
