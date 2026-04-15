@@ -1,20 +1,20 @@
-SELECT pi.created_at                                                       transaction_dttm
+SELECT pi.created_at                                                              transaction_dttm
      , pi.player_id
-     , pi.id                                                               invoice_id
+     , pi.id                                                                      invoice_id
      , CASE
            WHEN pi.type IN (1, 4) AND pi.number = 1 AND pi.status = 2
                THEN pi.created_at
-    END                                                                 AS fd_dttm
-     , CASE WHEN pi.type IN (1, 4) AND pi.status = 2 THEN pi.number END AS deposit_number
+    END                                                                 AS        fd_dttm
+     , CASE WHEN pi.type IN (1, 4) AND pi.status = 2 THEN pi.number END AS        deposit_number
 --                        , pp.is_test                                                          test_account
 --                        , pp.country                                                          user_county
 --                        , pp.affiliate_tag
-     , ppm.method_name                                                  AS pay_method
+     , ppm.method_name                                                  AS        pay_method
      , CASE
            WHEN pi.type IN (1, 4) THEN 'deposit'
            WHEN pi.type IN (2, 5) THEN 'withdrowal'
            ELSE pi.type :: VARCHAR
-    END                                                                 AS transaction_type
+    END                                                                 AS        transaction_type
      , CASE
            WHEN pi.status = 2 THEN 'success'
            WHEN pi.status != 1 AND
@@ -28,13 +28,14 @@ SELECT pi.created_at                                                       trans
            ELSE
                'status: ' || pi.status :: VARCHAR ||
                ' (' || COALESCE(pi.status_result, 'no details') || ')'
-    END                                                                 AS transaction_status
+    END                                                                 AS        transaction_status
      , pi.status_result
      , ppd.payment_provider
-     , ppd.payment_method                                                  provider_pay_method
+     , ppd.payment_method                                                         provider_pay_method
      , pi.currency
-     , 1.0 * pi.base_currency_amount / 100                                 base_currency_amount
+     , 1.0 * pi.base_currency_amount / 100                                        base_currency_amount
      , pi.base_currency
+     , row_number() over (partition by pi.player_id order by pi.created_at desc ) user_transaction_order_desc
 FROM stealthcasino_payment_service.public.invoices pi
          --                               LEFT JOIN stealthcasino_player_service.public.players pp
 --                                         ON pp.id = pi.player_id
@@ -42,5 +43,7 @@ FROM stealthcasino_payment_service.public.invoices pi
                    ON ppm.id = pi.payment_method_id
          LEFT JOIN stealthcasino_payment_service.public.payment_details ppd
                    ON ppd.id = pi.payment_details_id
+where 1 = 1
+and pi.id = 'a6d4fcee-dbf8-4321-a298-13a22eb4a72d'
 ;
 
